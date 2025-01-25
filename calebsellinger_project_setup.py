@@ -17,10 +17,12 @@ TODO: Change the author in this opening docstring
 # Import moduldes from standand library
 # TODO: Import additional modules as needed
 import pathlib
+from pathlib import Path # For some reason it wouldn't import this for the rm_empty_dirs function, so I explicitly wrote it
+from time import sleep  #for Function 4
 
 # Import local modules
 # TODO: Change this to import your module and uncomment
-# import case_utils
+import utils_cselling
 
 #####################################
 # Declare global variables
@@ -57,7 +59,11 @@ def create_folders_for_range(start_year: int, end_year: int) -> None:
     )
 
     # TODO: Implement the actual folder creation logic
-    pass
+    for year in range(start_year,end_year + 1):
+        try:
+            project_path.joinpath(str(year)).mkdir(exist_ok=True)
+        except Exception as e:
+            print(f"No worky: {e}")
 
 
 #####################################
@@ -66,11 +72,33 @@ def create_folders_for_range(start_year: int, end_year: int) -> None:
 #####################################
 
 
-def create_folders_from_list(folder_list: list) -> None:
+def create_folders_from_list(folder_list: list, to_lowercase: bool = False, remove_spaces: bool = False) -> None:
     # TODO: Add docstring
+    """
+    Create folders for a given list.
+
+    Arguments:
+    folder_list -- list of folder names to create.
+    to_lowercase (Optional) -- items in list are forced lowercase.
+    remove_spaces (Optional) -- spaces within items in list are removed.
+    """
     # TODO: Log the function call and its arguments
+    print(
+        f"FUNCTION CALLED: create_folders_from_list with given list {folder_list}"
+    )
+
+    if to_lowercase:
+            folder_list = [folders.lower() for folders in folder_list]
+
+    if remove_spaces:
+        folder_list = [folders.replace(" ","") for folders in folder_list]
+
     # TODO: Implement this function and remove the temporary pass
-    pass
+    for folders in folder_list:
+        try:
+            project_path.joinpath(folders).mkdir(exist_ok=True)
+        except Exception as e:
+            print(f"No worky: {e}")
 
 
 #####################################
@@ -82,7 +110,23 @@ def create_folders_from_list(folder_list: list) -> None:
 
 def create_prefixed_folders(folder_list: list, prefix: str) -> None:
     # TODO: Implement this function professionally and remove the temporary pass
-    pass
+    """
+    Create folders for a given list with a prefix
+
+    Arguments:
+    folder_list -- list of folder names to create.
+    prefix -- prefix to add before each folder name given.
+    """
+
+    print(
+        f"FUNCTION CALLED: create_prefixed_folders with the given list: {folder_list} and prefix each name with \"{prefix}\""
+    )
+
+    for folders in folder_list:
+        try:
+            project_path.joinpath(f"{prefix}{folders}").mkdir(exist_ok=True)
+        except Exception as e:
+            print(f"No worky: {e}")
 
 
 #####################################
@@ -93,7 +137,37 @@ def create_prefixed_folders(folder_list: list, prefix: str) -> None:
 
 def create_folders_periodically(duration_seconds: int) -> None:
     # TODO: Implement this function professionally and remove the temporary pass
-    pass
+    """
+    Create folders periodically.
+
+    duration_seconds -- seconds to wait until new folder creation
+    """
+
+    print(
+        f"FUNCTION CALLED: create_folders_periodically every {duration_seconds} seconds"
+    )
+
+    x = 0
+    while x != 3:
+        try:
+            project_path.joinpath(f"Period {x}").mkdir(exist_ok=True)
+            sleep(duration_seconds)
+        except Exception as e:
+            print(f"No worky: {e}")
+
+        x += 1
+
+
+#####################################
+# Function to remove any empty directories, for testing purposes only.
+# Pass in project path
+#####################################
+
+
+def rm_empty_dirs(pth: Path) -> None:
+    for child in pth.iterdir():
+        if child.is_dir():
+            child.rmdir()
 
 
 #####################################
@@ -111,7 +185,10 @@ def main() -> None:
 
     # Print get_byline() from imported module
     # TODO: Change this to use your module function and uncomment
-    # print(f"Byline: {case_utils.get_byline()}")
+    print(f"Byline: {utils_cselling.get_byline()}")
+
+    # Remove any empty directories before starting, for testing purposes only
+    # rm_empty_dirs(pathlib.Path("data"))
 
     # Call function 1 to create folders for a range (e.g. years)
     create_folders_for_range(start_year=2020, end_year=2023)
@@ -142,7 +219,7 @@ def main() -> None:
         "Middle East",
     ]
     # Uncomment this line after you've added your custom logic
-    # create_folders_from_list(regions, to_lowercase=True, remove_spaces=True)
+    create_folders_from_list(regions, to_lowercase=True, remove_spaces=True)
 
     # End of main execution
     print("\n#####################################")
